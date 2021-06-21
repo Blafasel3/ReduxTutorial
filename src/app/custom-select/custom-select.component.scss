@@ -1,0 +1,131 @@
+:host {
+    --accent: white;
+    --border-color: black;
+    --background-color: white;
+    --border-size: 1px;
+
+    background: var(--background-color);
+    color: black;
+    width: 100%;
+    box-sizing: border-box;
+    position: relative;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+
+    .custom-label {
+        font-size: 1.25rem;
+        padding: 0.25em 4em 0.25em 1em;
+        white-space: nowrap;
+        overflow: hidden;
+        border: var(--border-size) solid var(--border-color);
+        display: flex;
+        align-items: center;
+        text-overflow: ellipsis;
+        height: 2rem;
+        width: -webkit-fill-available;
+    }
+
+    .custom-arrow {
+        --arrowSize: 0.5rem;
+        position: absolute;
+        top: calc(2 * var(--border-size));
+        right: calc(2 * var(--border-size));
+        background: var(--background-color);
+        height: calc(100% - 4 * var(--border-size));
+        width: 7.5%;
+
+        &::before,
+        &::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        &::before {
+            border-left: var(--arrowSize) solid transparent;
+            border-right: var(--arrowSize) solid transparent;
+            border-bottom: var(--arrowSize) solid rgba($color: black, $alpha: 0.5);
+            top: calc(55% - calc(var(--arrowSize)));
+        }
+
+        &::after {
+            border-left: var(--arrowSize) solid transparent;
+            border-right: var(--arrowSize) solid transparent;
+            border-top: var(--arrowSize) solid rgba($color: black, $alpha: 0.5);
+            top: calc(45% + calc(var(--arrowSize)));
+        }
+
+        &.opened {
+            &::after {
+                border-top: var(--arrowSize) solid #066380;
+            }
+        }
+    }
+
+    ::-webkit-scrollbar {
+        width: 0.5em;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: rgba(19, 115, 139, 0.5);
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: rgb(19, 115, 139);
+    }
+
+    .custom-select-option-list {
+        margin: 0;
+        list-style: none;
+        font-size: 1em;
+        padding: 0.25em 0.5em;
+        border: var(--border-size) solid var(--border-color);
+        border-top: 0;
+        background: var(--background-color);
+        display: flex;
+        flex-direction: column;
+
+        position: absolute;
+        overflow: auto;
+        width: 100%;
+        max-height: 10.25em;
+        box-sizing: border-box;
+
+        .custom-select-option {
+            display: grid;
+            grid-template-columns: 1fr 24px;
+            grid-gap: 1em;
+
+            box-sizing: border-box;
+            height: 100%;
+            width: 100%;
+            padding: 0.25em 0;
+
+            &:hover {
+                background: var(--accent);
+            }
+
+            &:not(:last-child) {
+                border-bottom: 1px solid #3b3c47;
+            }
+
+            .custom-select-selected {
+                height: 100%;
+                width: 100%;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-image: url('/assets/icons/done_black_24dp.svg');
+            }
+
+            .custom-select-value {
+                box-sizing: border-box;
+                height: 100%;
+                width: 100%;
+            }
+        }
+    }
+}
