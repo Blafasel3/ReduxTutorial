@@ -1,12 +1,21 @@
-import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 @Component({
   selector: 'app-custom-select',
   templateUrl: './custom-select.component.html',
-  styleUrls: ['./custom-select.component.scss']
+  styleUrls: ['./custom-select.component.scss'],
 })
 export class CustomSelectComponent implements OnChanges, OnInit {
-
   @HostListener('focusout ') // TODO überdenken
   onMouseLeave() {
     this.showList = false;
@@ -33,15 +42,23 @@ export class CustomSelectComponent implements OnChanges, OnInit {
   @Output()
   readonly selectionChanged = new EventEmitter<string[]>();
 
-  selectedToOption = new Map<string, { selected: boolean, visible: boolean }>();
+  selectedToOption = new Map<string, { selected: boolean; visible: boolean }>();
   showList = false;
   selectionText: string = '';
 
   ngOnChanges(changes: SimpleChanges): void {
     const multiSelectChange = changes.multiSelect;
     if (multiSelectChange != null) {
-      if (multiSelectChange.currentValue === false && this.getCurrentlySelectedValues().length > 1) {
-        Object.values(this.options).forEach(option => this.selectedToOption.set(option, { selected: false, visible: this.filteredOptions.includes(option) }));
+      if (
+        multiSelectChange.currentValue === false &&
+        this.getCurrentlySelectedValues().length > 1
+      ) {
+        Object.values(this.options).forEach((option) =>
+          this.selectedToOption.set(option, {
+            selected: false,
+            visible: this.filteredOptions.includes(option),
+          })
+        );
         this.selectionText = '';
         this.selectionChanged.emit([]);
       }
@@ -51,7 +68,13 @@ export class CustomSelectComponent implements OnChanges, OnInit {
     if (optionsChange) {
       const options = optionsChange.currentValue;
       this.filteredOptions = [...options];
-      options.forEach(option => this.selectedToOption.set(option, { selected: false, visible: this.filteredOptions.includes(option) }));
+      options.forEach((option) =>
+        this.selectedToOption.set(option, {
+          selected: false,
+          visible: this.filteredOptions.includes(option),
+        })
+      );
+      console.log(this.selectedToOption);
       this.onValueClick(this.options[0]);
     }
   }
@@ -59,7 +82,6 @@ export class CustomSelectComponent implements OnChanges, OnInit {
   ngOnInit(): void {
     if (this.required) {
       // TODO Validators -> need FormControl for that
-
     }
   }
 
@@ -68,15 +90,28 @@ export class CustomSelectComponent implements OnChanges, OnInit {
   }
 
   onInputChange(inputValue: string): void {
-    this.filteredOptions = this.options.filter(option => option.toLocaleLowerCase().startsWith(inputValue.toLocaleLowerCase()));
-    this.selectedToOption.forEach((params, key) => params.visible =  this.filteredOptions.includes(key));
+    this.filteredOptions = this.options.filter((option) =>
+      option.toLocaleLowerCase().startsWith(inputValue.toLocaleLowerCase())
+    );
+    this.selectedToOption.forEach(
+      (params, key) => (params.visible = this.filteredOptions.includes(key))
+    );
   }
 
   onValueClick(selectedKey: string): void {
     let selectedValues: string[];
-    this.selectedToOption[selectedKey] = !this.selectedToOption[selectedKey];
+    console.log(selectedKey, this.selectedToOption.get(selectedKey));
+    this.selectedToOption.get(selectedKey).selected =
+      !this.selectedToOption.get(selectedKey).selected;
     if (!this.multiSelect) {
-      Object.values(this.options).filter(key => key !== selectedKey).forEach(option => this.selectedToOption.set(option, { selected: false, visible: this.filteredOptions.includes(option) }));
+      Object.values(this.options)
+        .filter((key) => key !== selectedKey)
+        .forEach((option) =>
+          this.selectedToOption.set(option, {
+            selected: false,
+            visible: this.filteredOptions.includes(option),
+          })
+        );
       selectedValues = this.selectedToOption[selectedKey] ? [selectedKey] : [];
     } else {
       selectedValues = this.getCurrentlySelectedValues();
@@ -86,7 +121,8 @@ export class CustomSelectComponent implements OnChanges, OnInit {
   }
 
   private getCurrentlySelectedValues(): string[] {
-    return Array.from(this.selectedToOption.entries()).filter(it => it[1].selected === true).map(it => it[0]);
+    return Array.from(this.selectedToOption.entries())
+      .filter((it) => it[1].selected === true)
+      .map((it) => it[0]);
   }
-
 }

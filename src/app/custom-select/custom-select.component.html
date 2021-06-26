@@ -1,23 +1,26 @@
-<input class="custom-label"
-       type="text"
-       [value]="selectionText ? selectionText : placeholder"
-       (click)="onClick()"
-       (input)="onInputChange($event.target.value)" />
-<span class="custom-arrow"
-      [ngClass]="{'opened': showList}"
-      (click)="onClick()">
+<input
+  class="custom-label"
+  type="text"
+  [value]="selectionText ? selectionText : placeholder"
+  (click)="onClick()"
+  (input)="onInputChange($event.target.value)"
+/>
+<span class="custom-arrow" [ngClass]="{ opened: showList }" (click)="onClick()">
 </span>
-<div *ngIf="showList"
-     class="custom-select-option-list">
-     <ng-container *ngFor="let keyValue of selectedToOption | keyvalue">
-          <div *ngIf="keyValue.value.visible"
-               class="custom-select-option">
-               <li value="value"
-                   class="custom-select-value"
-                   (click)="onValueClick(keyValue.key)">{{keyValue.key}}
-               </li>
-               <span *ngIf="keyValue.value.selected"
-                     class="custom-select-checked"></span>
-          </div>
-     </ng-container>
+<div *ngIf="showList" class="custom-select-option-list">
+  <ng-container *ngFor="let keyValue of selectedToOption | keyvalue">
+    <div *ngIf="keyValue.value.visible" class="custom-select-option">
+      <li
+        value="value"
+        class="custom-select-value"
+        (click)="onValueClick(keyValue.key)"
+      >
+        {{ keyValue.key }}
+      </li>
+      <span
+        *ngIf="keyValue.value.selected"
+        class="custom-select-checked"
+      ></span>
+    </div>
+  </ng-container>
 </div>
