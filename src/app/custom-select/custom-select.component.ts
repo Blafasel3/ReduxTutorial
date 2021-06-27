@@ -71,7 +71,6 @@ export class CustomSelectComponent implements OnChanges, OnInit {
           visible: this.filteredOptions.includes(option),
         })
       );
-      console.log(this.selectedToOption);
       this.onValueClick(this.options[0]);
     }
   }
@@ -97,7 +96,6 @@ export class CustomSelectComponent implements OnChanges, OnInit {
 
   onValueClick(selectedKey: string): void {
     let selectedValues: string[];
-    console.log(selectedKey, this.selectedToOption.get(selectedKey));
     this.selectedToOption.get(selectedKey).selected =
       !this.selectedToOption.get(selectedKey).selected;
     if (!this.multiSelect) {
