@@ -1,6 +1,6 @@
 import {
-  ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   HostListener,
   Input,
@@ -16,14 +16,9 @@ import {
   styleUrls: ['./custom-select.component.scss'],
 })
 export class CustomSelectComponent implements OnChanges, OnInit {
-  @HostListener('focusout ') // TODO überdenken
-  onMouseLeave() {
-    this.showList = false;
-  }
-
-  @HostListener('focusin')
-  onMouseEnter() {
-    this.showList = true;
+  @HostListener('document:click', ['$event'])
+  clickout(event) {
+    this.showList = this.elementRef.nativeElement.contains(event.target);
   }
 
   @Input()
@@ -45,6 +40,8 @@ export class CustomSelectComponent implements OnChanges, OnInit {
   selectedToOption = new Map<string, { selected: boolean; visible: boolean }>();
   showList = false;
   selectionText: string = '';
+
+  constructor(private readonly elementRef: ElementRef) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     const multiSelectChange = changes.multiSelect;
@@ -108,11 +105,13 @@ export class CustomSelectComponent implements OnChanges, OnInit {
         .filter((key) => key !== selectedKey)
         .forEach((option) =>
           this.selectedToOption.set(option, {
+            ...this.selectedToOption.get(option),
             selected: false,
-            visible: this.filteredOptions.includes(option),
           })
         );
-      selectedValues = this.selectedToOption[selectedKey] ? [selectedKey] : [];
+      selectedValues = this.selectedToOption.get(selectedKey)
+        ? [selectedKey]
+        : [];
     } else {
       selectedValues = this.getCurrentlySelectedValues();
     }
